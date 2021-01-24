@@ -1,4 +1,4 @@
-spring.datasource.url: jdbc:h2:file:./camunda-h2-database
+#spring.datasource.url: jdbc:h2:file:./camunda-h2-database
 
 camunda.bpm.admin-user:
   id: admin
@@ -12,3 +12,7 @@ spring:
       password: demo
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+  datasource:
+    url: jdbc:mysql://localhost:3306/mysql
+    username: root
+    password: root
