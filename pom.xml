@@ -18,6 +18,13 @@
         <scope>import</scope>
       </dependency>
 
+<!--oracle dependency-->
+      <dependency>
+        <groupId>com.oracle</groupId>
+        <artifactId>ojdbc8</artifactId>
+        <version>12.2.0.1</version>
+      </dependency>
+
       <dependency>
         <groupId>org.camunda.bpm</groupId>
         <artifactId>camunda-bom</artifactId>
