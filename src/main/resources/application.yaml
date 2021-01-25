@@ -4,20 +4,43 @@ camunda.bpm.admin-user:
   id: admin
   password: admin
 
-#disable spring security
 spring:
   security:
     user:
       name: demo
       password: demo
   autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
-#  datasource:
-#    url: jdbc:mysql://localhost:3306/mysql
+    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration #disable spring security
+  datasource:
+    db1: #primary db
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbcUrl: jdbc:mysql://localhost:3306/mysql
+      username: root
+      password: root
+    db2: #camunda mysql db
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbcUrl: jdbc:mysql://localhost:3306/camundadb
+      username: root
+      password: root
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    show-sql: false
+    hibernate:
+      ddl-auto: create # Hibernate ddl auto for generating the database schema
+#    properties:
+#      hibernate:
+#      dialect: org.hibernate.dialect.MySQLDialect
+
+#  db3: #camunda oracle db
+#    driverClassName: oracle.jdbc.driver.OracleDriver
+#    jdbc-url: jdbc:oracle:thin:@//localhost:3060/orclpdb
 #    username: root
 #    password: root
-  datasource:
-    driverClassName: oracle.jdbc.driver.OracleDriver
-    jdbc-url: jdbc:oracle:thin:@//localhost:3060/orclpdb
-    username: root
-    password: root
+
+#camunda:
+#  bpm:
+#    enabled: true
+#    database:
+#      jdbc-batch-processing: false
+#      schema-update: false
+#      databaseSchemaUpdate: false
