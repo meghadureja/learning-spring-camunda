@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_09xwt9a" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.7.3">
+  <bpmn:collaboration id="Request_To_Delivery_Workflow">
+    <bpmn:participant id="Participant_11idy2g" name="Request-to-Delivery" processRef="Process_0eurk9i" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_0eurk9i" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_0mjdf3f">
+      <bpmn:lane id="Lane_17scsv1" name="Sales Team">
+        <bpmn:flowNodeRef>Event_1g7mq6x</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_01bezud</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_1r0uz6x</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_1bndu1j</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_0utduop</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_196pmz3" name="Service Delivery Team">
+        <bpmn:flowNodeRef>Event_1xzcqti</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_0cnmq9a</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_00e4lry</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="Event_1g7mq6x" name="Client Called">
+      <bpmn:outgoing>Flow_1w03s3w</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:exclusiveGateway id="Gateway_01bezud" name="Did the client accept?">
+      <bpmn:incoming>Flow_0bku8u8</bpmn:incoming>
+      <bpmn:outgoing>Flow_0ixgtu6</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0pgz6nu</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="Event_1r0uz6x" name="Quote Refused">
+      <bpmn:incoming>Flow_0ixgtu6</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="Event_1xzcqti" name="Service Provided">
+      <bpmn:incoming>Flow_1lg8tgr</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1w03s3w" sourceRef="Event_1g7mq6x" targetRef="Activity_0utduop" />
+    <bpmn:sequenceFlow id="Flow_12rhhhj" sourceRef="Activity_0utduop" targetRef="Activity_1bndu1j" />
+    <bpmn:sequenceFlow id="Flow_0bku8u8" sourceRef="Activity_1bndu1j" targetRef="Gateway_01bezud" />
+    <bpmn:sequenceFlow id="Flow_0ixgtu6" name="No" sourceRef="Gateway_01bezud" targetRef="Event_1r0uz6x" />
+    <bpmn:sequenceFlow id="Flow_0pgz6nu" name="Yes" sourceRef="Gateway_01bezud" targetRef="Activity_0cnmq9a" />
+    <bpmn:sequenceFlow id="Flow_1004u30" sourceRef="Activity_0cnmq9a" targetRef="Activity_00e4lry" />
+    <bpmn:sequenceFlow id="Flow_1lg8tgr" sourceRef="Activity_00e4lry" targetRef="Event_1xzcqti" />
+    <bpmn:sendTask id="Activity_1bndu1j" name="Send Quote" camunda:delegateExpression="#{sendTaskDelegate}">
+      <bpmn:incoming>Flow_12rhhhj</bpmn:incoming>
+      <bpmn:outgoing>Flow_0bku8u8</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:userTask id="Activity_0utduop" name="Create Quote" camunda:assignee="demo">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="amount" label="Amount" type="long" />
+          <camunda:formField id="item" label="Item" type="string" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1w03s3w</bpmn:incoming>
+      <bpmn:outgoing>Flow_12rhhhj</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="Activity_0cnmq9a" name="Provide Service" camunda:delegateExpression="#{provideServiceTaskDelegate}">
+      <bpmn:incoming>Flow_0pgz6nu</bpmn:incoming>
+      <bpmn:outgoing>Flow_1004u30</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:receiveTask id="Activity_00e4lry" name="Send Report and Survey" messageRef="Message_117nst8">
+      <bpmn:incoming>Flow_1004u30</bpmn:incoming>
+      <bpmn:outgoing>Flow_1lg8tgr</bpmn:outgoing>
+    </bpmn:receiveTask>
+  </bpmn:process>
+  <bpmn:message id="Message_117nst8" name="message_ReportReceived" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Request_To_Delivery_Workflow">
+      <bpmndi:BPMNShape id="Participant_11idy2g_di" bpmnElement="Participant_11idy2g" isHorizontal="true">
+        <dc:Bounds x="170" y="80" width="950" height="440" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_196pmz3_di" bpmnElement="Lane_196pmz3" isHorizontal="true">
+        <dc:Bounds x="200" y="300" width="920" height="220" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_17scsv1_di" bpmnElement="Lane_17scsv1" isHorizontal="true">
+        <dc:Bounds x="200" y="80" width="920" height="220" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1lg8tgr_di" bpmnElement="Flow_1lg8tgr">
+        <di:waypoint x="890" y="400" />
+        <di:waypoint x="942" y="400" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1004u30_di" bpmnElement="Flow_1004u30">
+        <di:waypoint x="740" y="400" />
+        <di:waypoint x="790" y="400" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0pgz6nu_di" bpmnElement="Flow_0pgz6nu">
+        <di:waypoint x="690" y="225" />
+        <di:waypoint x="690" y="360" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="696" y="278" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ixgtu6_di" bpmnElement="Flow_0ixgtu6">
+        <di:waypoint x="715" y="200" />
+        <di:waypoint x="782" y="200" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="741" y="182" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0bku8u8_di" bpmnElement="Flow_0bku8u8">
+        <di:waypoint x="600" y="200" />
+        <di:waypoint x="665" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_12rhhhj_di" bpmnElement="Flow_12rhhhj">
+        <di:waypoint x="440" y="200" />
+        <di:waypoint x="500" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1w03s3w_di" bpmnElement="Flow_1w03s3w">
+        <di:waypoint x="288" y="200" />
+        <di:waypoint x="340" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_1g7mq6x_di" bpmnElement="Event_1g7mq6x">
+        <dc:Bounds x="252" y="182" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="239" y="225" width="63" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_01bezud_di" bpmnElement="Gateway_01bezud" isMarkerVisible="true">
+        <dc:Bounds x="665" y="175" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="658" y="145" width="64" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1r0uz6x_di" bpmnElement="Event_1r0uz6x">
+        <dc:Bounds x="782" y="182" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="765" y="225" width="74" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1xzcqti_di" bpmnElement="Event_1xzcqti">
+        <dc:Bounds x="942" y="382" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="919" y="425" width="84" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0xkqfer_di" bpmnElement="Activity_1bndu1j">
+        <dc:Bounds x="500" y="160" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1v7puz6_di" bpmnElement="Activity_0utduop">
+        <dc:Bounds x="340" y="160" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0yfc0jk_di" bpmnElement="Activity_0cnmq9a">
+        <dc:Bounds x="640" y="360" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0gbln3d_di" bpmnElement="Activity_00e4lry">
+        <dc:Bounds x="790" y="360" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
