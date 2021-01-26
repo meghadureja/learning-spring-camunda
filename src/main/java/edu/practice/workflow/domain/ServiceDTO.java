@@ -1,4 +1,6 @@
 package edu.practice.workflow.domain;
 
-public class ServiceDTO {
+import java.io.Serializable;
+
+public class ServiceDTO implements Serializable {
 }

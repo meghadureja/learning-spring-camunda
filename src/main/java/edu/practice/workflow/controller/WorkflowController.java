@@ -5,6 +5,8 @@ import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.variable.Variables;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import static edu.practice.workflow.constants.Constants.*;
@@ -16,12 +18,11 @@ public class WorkflowController {
   RuntimeService runtimeService;
 
   @PostMapping("/processes/{clientId}")
-  @ResponseBody
-  public String startWorkflowProcess(@RequestBody ServiceDTO serviceDTO, @PathVariable("clientId") Long clientId) {
+  public ResponseEntity<String> startWorkflowProcess(@RequestBody ServiceDTO serviceDTO, @PathVariable("clientId") Long clientId) {
     ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(PROCESS_REQ_TO_DELIVERY,
       Variables.putValue(SERVICE_DTO, serviceDTO)
         .putValue(CLIENT_ID, clientId));
-    return processInstance.getProcessInstanceId();
+    return new ResponseEntity<>(processInstance.getProcessInstanceId(), HttpStatus.OK);
   }
 
 }
